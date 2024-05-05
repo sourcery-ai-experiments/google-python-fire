@@ -31,12 +31,13 @@ class ParserTest(testutils.BaseTestCase):
         """ """
         self.assertEqual(parser.SeparateFlagArgs([]), ([], []))
         self.assertEqual(parser.SeparateFlagArgs(["a", "b"]), (["a", "b"], []))
-        self.assertEqual(parser.SeparateFlagArgs(["a", "b", "--"]), (["a", "b"], []))
-        self.assertEqual(
-            parser.SeparateFlagArgs(["a", "b", "--", "c"]), (["a", "b"], ["c"])
-        )
+        self.assertEqual(parser.SeparateFlagArgs(["a", "b", "--"]),
+                         (["a", "b"], []))
+        self.assertEqual(parser.SeparateFlagArgs(["a", "b", "--", "c"]),
+                         (["a", "b"], ["c"]))
         self.assertEqual(parser.SeparateFlagArgs(["--"]), ([], []))
-        self.assertEqual(parser.SeparateFlagArgs(["--", "c", "d"]), ([], ["c", "d"]))
+        self.assertEqual(parser.SeparateFlagArgs(["--", "c", "d"]),
+                         ([], ["c", "d"]))
         self.assertEqual(
             parser.SeparateFlagArgs(["a", "b", "--", "c", "d"]),
             (["a", "b"], ["c", "d"]),
@@ -53,17 +54,21 @@ class ParserTest(testutils.BaseTestCase):
     def testDefaultParseValueStrings(self):
         """ """
         self.assertEqual(parser.DefaultParseValue("hello"), "hello")
-        self.assertEqual(parser.DefaultParseValue("path/file.jpg"), "path/file.jpg")
-        self.assertEqual(parser.DefaultParseValue("hello world"), "hello world")
+        self.assertEqual(parser.DefaultParseValue("path/file.jpg"),
+                         "path/file.jpg")
+        self.assertEqual(parser.DefaultParseValue("hello world"),
+                         "hello world")
         self.assertEqual(parser.DefaultParseValue("--flag"), "--flag")
 
     def testDefaultParseValueQuotedStrings(self):
         """ """
         self.assertEqual(parser.DefaultParseValue("'hello'"), "hello")
-        self.assertEqual(parser.DefaultParseValue("'hello world'"), "hello world")
+        self.assertEqual(parser.DefaultParseValue("'hello world'"),
+                         "hello world")
         self.assertEqual(parser.DefaultParseValue("'--flag'"), "--flag")
         self.assertEqual(parser.DefaultParseValue('"hello"'), "hello")
-        self.assertEqual(parser.DefaultParseValue('"hello world"'), "hello world")
+        self.assertEqual(parser.DefaultParseValue('"hello world"'),
+                         "hello world")
         self.assertEqual(parser.DefaultParseValue('"--flag"'), "--flag")
 
     def testDefaultParseValueSpecialStrings(self):
@@ -106,18 +111,22 @@ class ParserTest(testutils.BaseTestCase):
         """ """
         self.assertEqual(parser.DefaultParseValue("[1, 2, 3]"), [1, 2, 3])
         self.assertEqual(parser.DefaultParseValue('[1, "2", 3]'), [1, "2", 3])
-        self.assertEqual(parser.DefaultParseValue("[1, '\"2\"', 3]"), [1, '"2"', 3])
-        self.assertEqual(parser.DefaultParseValue('[1, "hello", 3]'), [1, "hello", 3])
+        self.assertEqual(parser.DefaultParseValue("[1, '\"2\"', 3]"),
+                         [1, '"2"', 3])
+        self.assertEqual(parser.DefaultParseValue('[1, "hello", 3]'),
+                         [1, "hello", 3])
 
     def testDefaultParseValueBareWordsLists(self):
         """ """
-        self.assertEqual(parser.DefaultParseValue('[one, 2, "3"]'), ["one", 2, "3"])
+        self.assertEqual(parser.DefaultParseValue('[one, 2, "3"]'),
+                         ["one", 2, "3"])
 
     def testDefaultParseValueDict(self):
         """ """
-        self.assertEqual(
-            parser.DefaultParseValue('{"abc": 5, "123": 1}'), {"abc": 5, "123": 1}
-        )
+        self.assertEqual(parser.DefaultParseValue('{"abc": 5, "123": 1}'), {
+            "abc": 5,
+            "123": 1
+        })
 
     def testDefaultParseValueNone(self):
         """ """
@@ -130,26 +139,34 @@ class ParserTest(testutils.BaseTestCase):
 
     def testDefaultParseValueBareWordsTuple(self):
         """ """
-        self.assertEqual(parser.DefaultParseValue('(one, 2, "3")'), ("one", 2, "3"))
-        self.assertEqual(parser.DefaultParseValue('one, "2", 3'), ("one", "2", 3))
+        self.assertEqual(parser.DefaultParseValue('(one, 2, "3")'),
+                         ("one", 2, "3"))
+        self.assertEqual(parser.DefaultParseValue('one, "2", 3'),
+                         ("one", "2", 3))
 
     def testDefaultParseValueNestedContainers(self):
         """ """
         self.assertEqual(
-            parser.DefaultParseValue('[(A, 2, "3"), 5, {alpha: 10.2, beta: "cat"}]'),
-            [("A", 2, "3"), 5, {"alpha": 10.2, "beta": "cat"}],
+            parser.DefaultParseValue(
+                '[(A, 2, "3"), 5, {alpha: 10.2, beta: "cat"}]'),
+            [("A", 2, "3"), 5, {
+                "alpha": 10.2,
+                "beta": "cat"
+            }],
         )
 
     def testDefaultParseValueComments(self):
         """ """
-        self.assertEqual(parser.DefaultParseValue('"0#comments"'), "0#comments")
+        self.assertEqual(parser.DefaultParseValue('"0#comments"'),
+                         "0#comments")
         # Comments are stripped. This behavior may change in the future.
         self.assertEqual(parser.DefaultParseValue("0#comments"), 0)
 
     def testDefaultParseValueBadLiteral(self):
         """ """
         # If it can't be parsed, we treat it as a string. This behavior may change.
-        self.assertEqual(parser.DefaultParseValue('[(A, 2, "3"), 5'), '[(A, 2, "3"), 5')
+        self.assertEqual(parser.DefaultParseValue('[(A, 2, "3"), 5'),
+                         '[(A, 2, "3"), 5')
         self.assertEqual(parser.DefaultParseValue("x=10"), "x=10")
 
     def testDefaultParseValueSyntaxError(self):
