@@ -12,9 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Tests for the parser module."""
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 from fire import parser
 from fire import testutils
